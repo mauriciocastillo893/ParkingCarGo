@@ -45,7 +45,7 @@ func (m *FirstView) DrawSceneMenu() {
 
 	m.window.SetContent(container_center)
 	m.window.Resize(fyne.NewSize(600, 600))
-	m.window.SetFixedSize(true)
+	m.window.SetFixedSize(false)
 }
 
 func (m *FirstView) ExitProgram() {

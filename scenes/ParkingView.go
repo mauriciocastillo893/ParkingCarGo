@@ -1,15 +1,13 @@
 package scenes
 
 import (
+	"parking/models"
+	"time"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	_"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
-	_"fyne.io/fyne/v2/widget"
-	"image/color"
-	"parking/models"
-	"time"
 )
 
 var semRenderNewCarWait chan bool
@@ -34,41 +32,28 @@ func NewParkingView(window fyne.Window) *ParkingView {
 func (p *ParkingView) MakeScene() {
 	cParkView := container.New(layout.NewVBoxLayout())
 	cParkOut := container.New(layout.NewHBoxLayout())
-	cButttons := container.New(layout.NewHBoxLayout())
-	// restart := widget.NewButton("Restart Simulation", func() {
-	// 	dialog.ShowConfirm("Restart", "Do you want to restart the app?", func(response bool) {
-	// 		if response {
-	// 			p.RestarEmulator()
-	// 		}
-	// 	}, p.window)
-	// })
 
-	// exit := widget.NewButton("Menu Exit",
-	// 	func() {
-	// 		dialog.ShowConfirm("Exit", "Do you want to go out from here?", func(response bool) {
-	// 			if response {
-	// 				p.BackToMenu()
-	// 			}
-	// 		}, p.window)
-	// 	},
-	// )
+	// ALL THE STATION
+	cParkView.Add(p.MakeEnterAndExitStation())
 
-	// cButttons.Add(restart)
-	// cButttons.Add(exit)
-	cParkOut.Add(p.MakeWaitStation())
-	cParkOut.Add(layout.NewSpacer())
+	// SQUARE OF EXIT
 	cParkOut.Add(p.MakeExitStation())
 	cParkOut.Add(layout.NewSpacer())
+	
+	// SQUEARE OF WAIT PLACE
+	cParkOut.Add(p.MakeWaitStation())
+
+	// VIEW OF THE CARS WHEN ENTRIES AND OUTS + SPACE LINE
 	cParkView.Add(cParkOut)
 	cParkView.Add(layout.NewSpacer())
-	cParkView.Add(p.MakeParkingLotEntrance())
-	cParkView.Add(layout.NewSpacer())
-	cParkView.Add(p.MakeEnterAndExitStation())
-	cParkView.Add(layout.NewSpacer())
-	cParkView.Add(p.MakeParking())
+
+	// SPACE BETWEEN PARKING AND ENTRIE-EXIT
 	cParkView.Add(layout.NewSpacer())
 
-	cParkView.Add(container.NewCenter(cButttons))
+	cParkView.Add(p.MakeParking())
+	// BUTTON SPACE
+	cParkView.Add(layout.NewSpacer())
+
 	p.window.SetContent(cParkView)
 	p.window.Resize(fyne.NewSize(600, 600))
 	p.window.CenterOnScreen()
@@ -108,20 +93,14 @@ func (p *ParkingView) MakeEnterAndExitStation() *fyne.Container {
 	parkingContainer := container.New(layout.NewGridLayout(5))
 	parkingContainer.Add(layout.NewSpacer())
 	entrace := parking.MakeEntraceStation()
+
 	parkingContainer.Add(entrace.GetRectangle())
 	parkingContainer.Add(layout.NewSpacer())
 	exit := parking.MakeExitStation()
+
 	parkingContainer.Add(exit.GetRectangle())
 	parkingContainer.Add(layout.NewSpacer())
 	return container.NewCenter(parkingContainer)
-}
-
-func (p *ParkingView) MakeParkingLotEntrance() *fyne.Container {
-	EntraceContainer := container.New(layout.NewGridLayout(3))
-	EntraceContainer.Add(makeBorder())
-	EntraceContainer.Add(layout.NewSpacer())
-	EntraceContainer.Add(makeBorder())
-	return EntraceContainer
 }
 
 func (p *ParkingView) RenderNewCarWaitStation() {
@@ -163,26 +142,8 @@ func (p *ParkingView) StartEmulator() {
 
 }
 
-func (p *ParkingView) BackToMenu() {
-	close(semQuit)
-	NewFirstView(p.window)
-}
-
-func (p *ParkingView) RestarEmulator() {
-	close(semQuit)
-	NewParkingView(p.window)
-}
-
 func addSpace(parkingContainer *fyne.Container) {
 	for j := 0; j < 5; j++ {
 		parkingContainer.Add(layout.NewSpacer())
 	}
-}
-
-func makeBorder() *canvas.Rectangle {
-	square := canvas.NewRectangle(color.RGBA{R: 255, G: 255, B: 255, A: 0})
-	square.SetMinSize(fyne.NewSquareSize(float32(30)))
-	square.StrokeColor = color.RGBA{R: 255, G: 255, B: 255, A: 255}
-	square.StrokeWidth = float32(1)
-	return square
 }

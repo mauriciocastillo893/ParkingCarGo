@@ -8,9 +8,9 @@ import (
 
 func main() {
 	app := app.New()
-	w := app.NewWindow("ParkingCarGo")
+	w := app.NewWindow("Parking Car Go")
 	w.CenterOnScreen()
-	view.NewMainView(w)
+	view.NewFirstView(w)
 	fmt.Println("Program is okay")
 	w.ShowAndRun()
 }

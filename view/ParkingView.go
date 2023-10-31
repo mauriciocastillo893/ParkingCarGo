@@ -1,21 +1,19 @@
 package view
 
 import (
-	"image/color"
-	"parking/models"
-	"time"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"image/color"
+	"parking/models"
+	"time"
 )
 
 var semRenderNewCarWait chan bool
 var semQuit chan bool
-// var Gray = color.RGBA{R: 30, G: 30, B: 30, A: 255}
 var parking *models.Parking
 
 type ParkingView struct {
@@ -29,25 +27,25 @@ func NewParkingView(window fyne.Window) *ParkingView {
 	semRenderNewCarWait = make(chan bool)
 	parking = models.NewParking(semRenderNewCarWait, semQuit)
 	parkingView.MakeScene()
-	parkingView.StartSimulation()
+	parkingView.StartEmulator()
 	return parkingView
 }
 
 func (p *ParkingView) MakeScene() {
-	containerParkingView := container.New(layout.NewVBoxLayout())
-	containerParkingOut := container.New(layout.NewHBoxLayout())
-	containerButtons := container.New(layout.NewHBoxLayout())
+	cParkView := container.New(layout.NewVBoxLayout())
+	cParkOut := container.New(layout.NewHBoxLayout())
+	cButttons := container.New(layout.NewHBoxLayout())
 	restart := widget.NewButton("Restart Simulation", func() {
-		dialog.ShowConfirm("Salir", "¿Desea Reiniciar la aplicación?", func(response bool) {
+		dialog.ShowConfirm("Restart", "Do you want to restart the app?", func(response bool) {
 			if response {
-				p.RestartSimulation()
+				p.RestarEmulator()
 			}
 		}, p.window)
 	})
 
 	exit := widget.NewButton("Menu Exit",
 		func() {
-			dialog.ShowConfirm("Salir", "¿Desea salir de la aplicación?", func(response bool) {
+			dialog.ShowConfirm("Exit", "Do you want to go out from here?", func(response bool) {
 				if response {
 					p.BackToMenu()
 				}
@@ -55,25 +53,23 @@ func (p *ParkingView) MakeScene() {
 		},
 	)
 
-	containerButtons.Add(restart)
-	containerButtons.Add(exit)
+	cButttons.Add(restart)
+	cButttons.Add(exit)
+	cParkOut.Add(p.MakeWaitStation())
+	cParkOut.Add(layout.NewSpacer())
+	cParkOut.Add(p.MakeExitStation())
+	cParkOut.Add(layout.NewSpacer())
+	cParkView.Add(cParkOut)
+	cParkView.Add(layout.NewSpacer())
+	cParkView.Add(p.MakeParkingLotEntrance())
+	cParkView.Add(layout.NewSpacer())
+	cParkView.Add(p.MakeEnterAndExitStation())
+	cParkView.Add(layout.NewSpacer())
+	cParkView.Add(p.MakeParking())
+	cParkView.Add(layout.NewSpacer())
 
-	containerParkingOut.Add(p.MakeWaitStation())
-	containerParkingOut.Add(layout.NewSpacer())
-	containerParkingOut.Add(p.MakeExitStation())
-	containerParkingOut.Add(layout.NewSpacer())
-
-	containerParkingView.Add(containerParkingOut)
-	containerParkingView.Add(layout.NewSpacer())
-	containerParkingView.Add(p.MakeParkingLotEntrance())
-	containerParkingView.Add(layout.NewSpacer())
-	containerParkingView.Add(p.MakeEnterAndExitStation())
-	containerParkingView.Add(layout.NewSpacer())
-	containerParkingView.Add(p.MakeParking())
-	containerParkingView.Add(layout.NewSpacer())
-
-	containerParkingView.Add(container.NewCenter(containerButtons))
-	p.window.SetContent(containerParkingView)
+	cParkView.Add(container.NewCenter(cButttons))
+	p.window.SetContent(cParkView)
 	p.window.Resize(fyne.NewSize(600, 600))
 	p.window.CenterOnScreen()
 }
@@ -158,9 +154,9 @@ func (p *ParkingView) RenderUpdate() {
 	}
 }
 
-func (p *ParkingView) StartSimulation() {
+func (p *ParkingView) StartEmulator() {
 	go parking.GenerateCars()
-	go parking.OutCarToExit()
+	go parking.GoOutCars()
 	go parking.CheckParking()
 	go p.RenderNewCarWaitStation()
 	go p.RenderUpdate()
@@ -169,10 +165,10 @@ func (p *ParkingView) StartSimulation() {
 
 func (p *ParkingView) BackToMenu() {
 	close(semQuit)
-	NewMainView(p.window)
+	NewFirstView(p.window)
 }
 
-func (p *ParkingView) RestartSimulation() {
+func (p *ParkingView) RestarEmulator() {
 	close(semQuit)
 	NewParkingView(p.window)
 }

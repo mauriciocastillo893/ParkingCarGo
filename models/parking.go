@@ -114,7 +114,7 @@ func (p *Parking) MoveToPark(index int) {
 
 }
 
-func (p *Parking) OutCarToExit() {
+func (p *Parking) GoOutCars() {
 	for {
 		select {
 		case <-p.semQuit:

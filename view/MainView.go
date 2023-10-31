@@ -2,43 +2,45 @@ package view
 
 import (
 	"image/color"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"fyne.io/fyne/v2/theme"
 )
 
-type MainView struct {
+type FirstView struct {
 	window fyne.Window
 }
 
-func NewMainView(window fyne.Window) *MainView {
-	MainView := &MainView{
+func NewFirstView(window fyne.Window) *FirstView {
+	FirstView := &FirstView{
 		window: window,
 	}
-	MainView.InitApp()
-	return MainView
+	FirstView.InitApp()
+	return FirstView
 }
 
-func (m *MainView) InitApp() {
+func (m *FirstView) InitApp() {
 	m.DrawSceneMenu()
 }
 
-func (m *MainView) DrawSceneMenu() {
+func (m *FirstView) DrawSceneMenu() {
 	title := canvas.NewText("PARKING CAR SIMULATOR", color.RGBA{R: 200, G: 200, B: 200, A: 200})
-	title.Resize(fyne.NewSize(20, 20))
-	titleContainer := container.NewCenter(title)
+	title.TextStyle = fyne.TextStyle{Bold: true, Italic: false}
+	title.Resize(fyne.NewSize(60, 60))
+	
+	titleContainer := container.New(layout.NewVBoxLayout(), layout.NewSpacer(), container.NewCenter(title), layout.NewSpacer())
+	exit := widget.NewButton("Exit to the program", m.ExitProgram)
+	start := widget.NewButton("Start to emulate", m.StartEmulation)
 
-	start := widget.NewButton("Start Emulate Game", m.StartParkingSimulation)
-	exit := widget.NewButton("Exit", m.ExitGame)
-
+	buttonsContainer := container.NewHBox(layout.NewSpacer(), exit, layout.NewSpacer(), start, layout.NewSpacer())
 	container_center := container.NewVBox(
+		layout.NewSpacer(),
 		titleContainer,
 		layout.NewSpacer(),
-		start,
-		exit,
+		buttonsContainer,
 		layout.NewSpacer(),
 	)
 
@@ -47,10 +49,10 @@ func (m *MainView) DrawSceneMenu() {
 	m.window.SetFixedSize(true)
 }
 
-func (m *MainView) ExitGame() {
+func (m *FirstView) ExitProgram() {
 	m.window.Close()
 }
 
-func (m *MainView) StartParkingSimulation() {
+func (m *FirstView) StartEmulation() {
 	NewParkingView(m.window)
 }

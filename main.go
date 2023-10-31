@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"parking/view"
+	"parking/scenes"
 	"fyne.io/fyne/v2/app"
 )
 
@@ -10,7 +10,7 @@ func main() {
 	app := app.New()
 	w := app.NewWindow("Parking Car Go")
 	w.CenterOnScreen()
-	view.NewFirstView(w)
+	scenes.NewFirstView(w)
 	fmt.Println("Program is okay")
 	w.ShowAndRun()
 }

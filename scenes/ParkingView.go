@@ -1,4 +1,4 @@
-package view
+package scenes
 
 import (
 	"fyne.io/fyne/v2"

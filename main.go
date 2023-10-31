@@ -3,15 +3,14 @@ package main
 import (
 	"fmt"
 	"parking/view"
-
 	"fyne.io/fyne/v2/app"
 )
 
 func main() {
 	app := app.New()
-	window := app.NewWindow("ParkingCarGo")
-	window.CenterOnScreen()
-	view.NewMainView(window)
+	w := app.NewWindow("ParkingCarGo")
+	w.CenterOnScreen()
+	view.NewMainView(w)
 	fmt.Println("Program is okay")
-	window.ShowAndRun()
+	w.ShowAndRun()
 }

@@ -4,9 +4,9 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/dialog"
+	_"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
-	"fyne.io/fyne/v2/widget"
+	_"fyne.io/fyne/v2/widget"
 	"image/color"
 	"parking/models"
 	"time"
@@ -35,26 +35,26 @@ func (p *ParkingView) MakeScene() {
 	cParkView := container.New(layout.NewVBoxLayout())
 	cParkOut := container.New(layout.NewHBoxLayout())
 	cButttons := container.New(layout.NewHBoxLayout())
-	restart := widget.NewButton("Restart Simulation", func() {
-		dialog.ShowConfirm("Restart", "Do you want to restart the app?", func(response bool) {
-			if response {
-				p.RestarEmulator()
-			}
-		}, p.window)
-	})
+	// restart := widget.NewButton("Restart Simulation", func() {
+	// 	dialog.ShowConfirm("Restart", "Do you want to restart the app?", func(response bool) {
+	// 		if response {
+	// 			p.RestarEmulator()
+	// 		}
+	// 	}, p.window)
+	// })
 
-	exit := widget.NewButton("Menu Exit",
-		func() {
-			dialog.ShowConfirm("Exit", "Do you want to go out from here?", func(response bool) {
-				if response {
-					p.BackToMenu()
-				}
-			}, p.window)
-		},
-	)
+	// exit := widget.NewButton("Menu Exit",
+	// 	func() {
+	// 		dialog.ShowConfirm("Exit", "Do you want to go out from here?", func(response bool) {
+	// 			if response {
+	// 				p.BackToMenu()
+	// 			}
+	// 		}, p.window)
+	// 	},
+	// )
 
-	cButttons.Add(restart)
-	cButttons.Add(exit)
+	// cButttons.Add(restart)
+	// cButttons.Add(exit)
 	cParkOut.Add(p.MakeWaitStation())
 	cParkOut.Add(layout.NewSpacer())
 	cParkOut.Add(p.MakeExitStation())
